@@ -1,0 +1,22 @@
+version = "1.0"
+
+window:
+{
+    name = "Arkins Demo";
+    width = 640;
+    height = 480;
+    enable_vsync = true;
+    framerate = 10;
+};
+
+image:
+{
+    folder = "/path/to/folder";
+    enable_smooth = true;
+};
+
+map:
+{
+    file = "/path/to/file";
+    space_arround = 100.0;
+}

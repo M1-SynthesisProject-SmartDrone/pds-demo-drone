@@ -1,0 +1,8 @@
+ - [] Drone Interface : mock v2
+    - [] Quand on modifie la position : on modifie global ET local (ou global en fct de local)
+    - [] Faire en sorte qu'on ait le données du drone, sauf la position (semi-mock)
+      - [] Drone Receiver mock mode du coup
+
+ - [] Demo interface
+   - [X] Afficher le flux video
+   - [] Afficher les infos du drone dans une autre fenêtre à part ?

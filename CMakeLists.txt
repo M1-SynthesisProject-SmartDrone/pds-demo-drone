@@ -45,6 +45,10 @@ add_definitions( ${BL_DEFINITIONS} )
 message("- Checking : libconfig")
 find_library(libconfig++ libconfig++ REQUIRED)
 
+message("- Checking : OpenCV")
+find_package( OpenCV REQUIRED )
+include_directories(${OpenCV_INCLUDE_DIRS})
+
 message("- Checking : Thread")
 find_package(Threads)
 
@@ -83,6 +87,7 @@ file(COPY config/config.cfg DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 add_executable(${APP_NAME} ${project_SRC})
 
 target_link_libraries(${APP_NAME} PUBLIC
+    ${OpenCV_LIBS}
     loguru
     nlohmann
     -lsfml-graphics

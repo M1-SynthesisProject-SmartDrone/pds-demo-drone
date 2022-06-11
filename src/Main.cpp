@@ -64,6 +64,7 @@ int main(int argc, char *argv[])
         
         // Render drone at the end, so that it is on top of all others
         renderer.renderDrone(engine.getDroneCoordinates(), window);
+        renderer.renderCameraImage(window);
 
         // End rendering
         // As we have defined framerate, we will have some sleeps calls after display

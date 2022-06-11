@@ -5,6 +5,7 @@
 #include <filesystem>
 
 #include <SFML/Graphics.hpp>
+#include <opencv2/opencv.hpp>
 
 #include "config/ConfigParams.h"
 #include "engine/Coordinates.h"
@@ -28,12 +29,20 @@ private:
     const std::filesystem::path m_imageFolderPath;
 
     // This is kept as we load an image for this element
-    static inline constexpr float DRONE_SIZE_RATIO = 0.07f;
+    static inline constexpr float DRONE_SCALE = 0.07f;
     sf::Texture m_droneTexture;
     sf::RectangleShape m_droneSprite;
 
     // We don't want to calculate some values over and over
     float m_pointRadius;
+
+    // Camera texture
+    static inline const float CAMERA_SCALE = 0.25f;
+    cv::Mat m_cameraMatBGR;
+    cv::Mat m_cameraMatRGBA;
+    sf::Image m_cameraImage;
+    sf::Texture m_cameraTexture;
+    sf::RectangleShape m_cameraSprite;
 
     // ==== PRIVATE METHODS ====
     /**
@@ -56,6 +65,9 @@ private:
      */
     sf::CircleShape createCircle(float radius, const sf::Color& color, bool colorOutline = false);
 
+    // ---- Camera settings ----
+    // void fillRgbaData(unsigned char* rgbData, uint32_t length);
+
 public:
     /**
      * This will check if the config is valid (correct image folder path, etc.)
@@ -68,6 +80,7 @@ public:
      */
     void renderGrid(sf::RenderWindow& window);
     void renderDrone(Coordinates& droneCoordinates, sf::RenderWindow& window);
+    void renderCameraImage(sf::RenderWindow& window);
 };
 
 #endif // __RENDERER_H__

@@ -1,0 +1,7 @@
+==== Modifs ====
+    ---- Affichage image ----
+        On veut afficher les images depuis blc_channel depuis une image à part
+
+        Afficher dans la même window ? en vrai oui
+
+        

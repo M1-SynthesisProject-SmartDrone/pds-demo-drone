@@ -1,7 +1,16 @@
 ==== Modifs ====
     ---- Affichage image ----
         On veut afficher les images depuis blc_channel depuis une image à part
+            ==> Afficher dans la même window ? en vrai oui
+        Le pb est qu'on a l'image en raw BGR, et sfml veut du RGBA
+            ==> Après des tentatives infructueuses, on va utiliser opencv juste pour ça et puis tant pis
 
-        Afficher dans la même window ? en vrai oui
-
-        
+    ---- Affichage infos ----
+        On va les afficher en haut à droite je pense
+        On veut :
+            - Position (pas sûr de ouf non plus)
+            - température
+            - pression
+            - batterie (%)
+            - Champs magéntiques ?
+            - etc.

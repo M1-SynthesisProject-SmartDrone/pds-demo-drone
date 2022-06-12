@@ -15,6 +15,11 @@ image:
     enable_smooth = true;
 };
 
+font:
+{
+    folder = "/home/aldric-vs/COURS/M1/projet_synthese/repos/pds-demo-drone/fonts";
+}
+
 map:
 {
     file = "/path/to/file";

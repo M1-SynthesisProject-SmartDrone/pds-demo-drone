@@ -49,6 +49,11 @@ ConfigParams ConfigParser::parse()
         imageSettings["enable_smooth"],
     };
 
+    const auto& fontSettings = root["font"];
+    auto fontConfig = ConfigFont{
+        fontSettings["folder"],
+    };
+
     const auto& mapSettings = root["map"];
     auto mapConfig = ConfigMap{
         mapSettings["width"],
@@ -58,6 +63,7 @@ ConfigParams ConfigParser::parse()
     return ConfigParams(
         windowConfig,
         imageConfig,
+        fontConfig,
         mapConfig
     );
 }

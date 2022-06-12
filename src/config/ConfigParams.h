@@ -18,6 +18,11 @@ struct ConfigImage
     bool enableSmooth;
 };
 
+struct ConfigFont
+{
+    std::string folderPath;
+};
+
 struct ConfigMap
 {
     float width;
@@ -35,8 +40,10 @@ struct ConfigParams
 
     ConfigMap map;
 
-    ConfigParams(ConfigWindow window, ConfigImage image, ConfigMap map) : 
-        window(window), image(image), map(map)
+    ConfigFont font;
+
+    ConfigParams(ConfigWindow window, ConfigImage image, ConfigFont font, ConfigMap map) : 
+        window(window), image(image), map(map), font(font)
     {}
 };
 

@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
     Engine engine;
     MapInfos mapInfos(params.map.width, params.map.height);
 
-    Renderer renderer(params.image, params.window, mapInfos);
+    Renderer renderer(params, mapInfos);
 
     // Background color
     sf::Color bgColor = sf::Color::White;
@@ -65,6 +65,7 @@ int main(int argc, char *argv[])
         // Render drone at the end, so that it is on top of all others
         renderer.renderDrone(engine.getDroneCoordinates(), window);
         renderer.renderCameraImage(window);
+        renderer.renderData(window);
 
         // End rendering
         // As we have defined framerate, we will have some sleeps calls after display

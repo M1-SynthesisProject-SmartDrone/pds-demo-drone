@@ -3,6 +3,7 @@
     - [] Faire en sorte qu'on ait le données du drone, sauf la position (semi-mock)
       - [] Drone Receiver mock mode du coup
 
- - [] Demo interface
+ - [X] Demo interface
    - [X] Afficher le flux video
-   - [] Afficher les infos du drone dans une autre fenêtre à part ?
+   - [X] Afficher les infos du drone
+   - [X] Le drone doit bouger selon les données de blc_channels

@@ -16,9 +16,14 @@ class Renderer
 private:
     // ==== IMAGE FILENAMES ====
     static inline const std::string DRONE_IMAGE_NAME = "drone.png";
+    
+    // ==== FONT FILENAMES ====
+    static inline const std::string LATO_FONT_NAME = "Lato-Regular.ttf";
 
     // ==== COLORS ====
-    static inline const sf::Color GRID_COLOR = sf::Color(105, 105, 105);;
+    static inline const sf::Color GRID_COLOR = sf::Color(105, 105, 105);
+    static inline const sf::Color DATA_BACKGROUND_COLOR = sf::Color::Black;
+    static inline const sf::Color DATA_TEXT_COLOR = sf::Color::White;
 
     // ==== SIZES ====
     static inline const float GRID_THICKNESS = 2.0f;
@@ -26,7 +31,9 @@ private:
     const MapInfos m_mapInfos;
     const ConfigWindow m_windowConfig;
     const ConfigImage m_imageConfig;
+    const ConfigFont m_fontConfig;
     const std::filesystem::path m_imageFolderPath;
+    const std::filesystem::path m_fontFolderPath;
 
     // This is kept as we load an image for this element
     static inline constexpr float DRONE_SCALE = 0.07f;
@@ -37,12 +44,16 @@ private:
     float m_pointRadius;
 
     // Camera texture
-    static inline const float CAMERA_SCALE = 0.25f;
-    cv::Mat m_cameraMatBGR;
+    static inline const float CAMERA_SCALE = 0.3f;
     cv::Mat m_cameraMatRGBA;
     sf::Image m_cameraImage;
     sf::Texture m_cameraTexture;
     sf::RectangleShape m_cameraSprite;
+
+    // Data display
+    sf::RectangleShape m_dataBackground;
+    sf::Font m_dataFont;
+    sf::Text m_dataText;
 
     // ==== PRIVATE METHODS ====
     /**
@@ -72,7 +83,7 @@ public:
     /**
      * This will check if the config is valid (correct image folder path, etc.)
      */ 
-    Renderer(ConfigImage imageConfig, ConfigWindow windowConfig, MapInfos mapInfos);
+    Renderer(ConfigParams& params, MapInfos mapInfos);
     ~Renderer();
 
     /**
@@ -81,6 +92,7 @@ public:
     void renderGrid(sf::RenderWindow& window);
     void renderDrone(Coordinates& droneCoordinates, sf::RenderWindow& window);
     void renderCameraImage(sf::RenderWindow& window);
+    void renderData(sf::RenderWindow& window);
 };
 
 #endif // __RENDERER_H__

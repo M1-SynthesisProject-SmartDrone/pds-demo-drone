@@ -9,16 +9,23 @@
 using namespace std;
 namespace fs = std::filesystem;
 
-Renderer::Renderer(ConfigImage imageConfig, ConfigWindow windowConfig, MapInfos mapInfos) :
-    m_imageConfig(imageConfig),
-    m_windowConfig(windowConfig),
-    m_imageFolderPath(imageConfig.folderPath),
+Renderer::Renderer(ConfigParams& params, MapInfos mapInfos) :
+    m_imageConfig(params.image),
+    m_windowConfig(params.window),
+    m_imageFolderPath(params.image.folderPath),
+    m_fontFolderPath(params.font.folderPath),
     m_mapInfos(mapInfos)
 {
     if (!fs::exists(m_imageFolderPath) || !fs::is_directory(m_imageFolderPath))
     {
         stringstream ss;
-        ss << "The folder \"" << imageConfig.folderPath << "\" does not exists";
+        ss << "The folder \"" << m_imageFolderPath << "\" does not exists";
+        throw runtime_error(ss.str());
+    }
+    if (!fs::exists(m_fontFolderPath) || !fs::is_directory(m_fontFolderPath))
+    {
+        stringstream ss;
+        ss << "The folder \"" << m_fontFolderPath << "\" does not exists";
         throw runtime_error(ss.str());
     }
     // Init drone
@@ -33,7 +40,7 @@ Renderer::Renderer(ConfigImage imageConfig, ConfigWindow windowConfig, MapInfos 
     // Precalculation of any point radius
     m_pointRadius = min(m_windowConfig.width, m_windowConfig.height) * 0.025f;
 
-    // ---- Creation of the camera texture ----
+    // ---- Camera ----
     auto nbRows = pdsChannels::imageSize.uints32[0];
     auto nbCols = pdsChannels::imageSize.uints32[1];
     m_cameraTexture.create(nbCols, nbRows);
@@ -44,6 +51,27 @@ Renderer::Renderer(ConfigImage imageConfig, ConfigWindow windowConfig, MapInfos 
     // origin on bottom-right (in order to place it on bottom right of the window)
     m_cameraSprite.setOrigin(sf::Vector2f(cameraWidth, cameraHeight));
     m_cameraSprite.setPosition(m_windowConfig.width, m_windowConfig.height);
+
+    // ---- Data display ----
+    // Size depend on camera one
+    float dataWidth = cameraWidth;
+    float dataHeight = m_windowConfig.height - cameraHeight;
+    m_dataBackground.setSize(sf::Vector2f(dataWidth, dataHeight));
+    // Origin on top-right (in order to place it on top right of the window)
+    m_dataBackground.setOrigin(sf::Vector2f(dataWidth, 0.f));
+    m_dataBackground.setPosition(m_windowConfig.width, 0.f);
+    m_dataBackground.setFillColor(DATA_BACKGROUND_COLOR);
+    // Load font
+    auto fontFilename = (m_fontFolderPath / LATO_FONT_NAME).string();
+    if(!m_dataFont.loadFromFile(fontFilename))
+    {
+        stringstream ss;
+        ss << "Error while loading font on path " << fontFilename;
+        throw runtime_error(ss.str());
+    }
+    m_dataText.setFont(m_dataFont);
+    m_dataText.setFillColor(DATA_TEXT_COLOR);
+    m_dataText.setPosition(m_windowConfig.width - dataWidth, 0.f);
 }
 
 Renderer::~Renderer()
@@ -64,6 +92,8 @@ sf::Texture Renderer::loadTexture(string baseFilename)
     return texture;
 }
 
+
+// ==== RENDER METHODS ====
 void Renderer::renderGrid(sf::RenderWindow& window)
 {
     float midGridThickness = GRID_THICKNESS / 2.0f;
@@ -87,7 +117,6 @@ void Renderer::renderDrone(Coordinates& droneCoordinates, sf::RenderWindow& wind
     window.draw(m_droneSprite);
 }
 
-
 void Renderer::renderCameraImage(sf::RenderWindow& window)
 {
     cv::Mat img(pdsChannels::imageSize.uints32[0], pdsChannels::imageSize.uints32[1], CV_8UC3, pdsChannels::image.uchars);
@@ -95,10 +124,26 @@ void Renderer::renderCameraImage(sf::RenderWindow& window)
     // We must update the texture data
     m_cameraImage.create(m_cameraMatRGBA.cols, m_cameraMatRGBA.rows, m_cameraMatRGBA.ptr());
     m_cameraTexture.loadFromImage(m_cameraImage);
-    m_cameraSprite.setTexture(&m_cameraTexture);
     window.draw(m_cameraSprite);
 }
 
+void Renderer::renderData(sf::RenderWindow& window)
+{
+    window.draw(m_dataBackground);
+    stringstream ss;
+    ss << "Posistion X : " << pdsChannels::localPositionNed.floats[0] << "\n";
+    ss << "Posistion Y : " << pdsChannels::localPositionNed.floats[1] << "\n";
+    ss << "Posistion Z : " << pdsChannels::localPositionNed.floats[2] << "\n";
+    ss << "Temperature : " << pdsChannels::highresImu.floats[12] << " C\n";
+    ss << "Pressure (abs) : " << pdsChannels::highresImu.floats[9] << " mbars\n";
+    ss << "Pressure (diff) : " << pdsChannels::highresImu.floats[10] << " mbars\n";
+    ss << "Battery : " << pdsChannels::battery.ints32[4] << " %\n";
+    m_dataText.setString(ss.str());
+    window.draw(m_dataText);
+}
+
+
+// ===== PRIVATE METHODS ====
 float Renderer::calculateXPos(float x)
 {
     auto& m = m_mapInfos;

@@ -131,6 +131,7 @@ void Renderer::renderData(sf::RenderWindow& window)
 {
     window.draw(m_dataBackground);
     stringstream ss;
+    ss << "State : " << (pdsChannels::state.chars[0] == 1 ? "Armed\n" : "Disarmed\n");
     ss << "Posistion X : " << pdsChannels::localPositionNed.floats[0] << "\n";
     ss << "Posistion Y : " << pdsChannels::localPositionNed.floats[1] << "\n";
     ss << "Posistion Z : " << pdsChannels::localPositionNed.floats[2] << "\n";

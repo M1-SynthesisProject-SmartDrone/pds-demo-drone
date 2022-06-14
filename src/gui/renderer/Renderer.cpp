@@ -70,6 +70,7 @@ Renderer::Renderer(ConfigParams& params, MapInfos mapInfos) :
         throw runtime_error(ss.str());
     }
     m_dataText.setFont(m_dataFont);
+    m_dataText.setCharacterSize(25);
     m_dataText.setFillColor(DATA_TEXT_COLOR);
     m_dataText.setPosition(m_windowConfig.width - dataWidth, 0.f);
 }
@@ -135,10 +136,14 @@ void Renderer::renderData(sf::RenderWindow& window)
     ss << "Posistion X : " << pdsChannels::localPositionNed.floats[0] << "\n";
     ss << "Posistion Y : " << pdsChannels::localPositionNed.floats[1] << "\n";
     ss << "Posistion Z : " << pdsChannels::localPositionNed.floats[2] << "\n";
-    ss << "Temperature : " << pdsChannels::highresImu.floats[12] << " C\n";
-    ss << "Pressure (abs) : " << pdsChannels::highresImu.floats[9] << " mbars\n";
-    ss << "Pressure (diff) : " << pdsChannels::highresImu.floats[10] << " mbars\n";
+    ss << "Temperature : " << pdsChannels::battery.ints32[2] << " cdegC\n";
     ss << "Battery : " << pdsChannels::battery.ints32[4] << " %\n";
+    ss << "roll : " << pdsChannels::attitude.floats[0] << "\n";
+    ss << "roll speed : " << pdsChannels::attitude.floats[3] << "\n";
+    ss << "yaw : " << pdsChannels::attitude.floats[1] << "\n";
+    ss << "yaw speed : " << pdsChannels::attitude.floats[4] << "\n";
+    ss << "pitch : " << pdsChannels::attitude.floats[2] << "\n";
+    ss << "pitch speed : " << pdsChannels::attitude.floats[5] << "\n";
     m_dataText.setString(ss.str());
     window.draw(m_dataText);
 }
